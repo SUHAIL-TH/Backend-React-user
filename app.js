@@ -2,7 +2,7 @@ const express =require("express")
 const app=express()
 const cors=require("cors")
 const userRoutes=require("./routes/user")
-const adminRoutes=require("./routes/admin")
+// const adminRoutes=require("./routes/admin")
 const dbconnect=require("./config/config")
 const morgan=require("morgan")
 
