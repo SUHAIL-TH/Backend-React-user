@@ -10,18 +10,23 @@ const postsigup=async(req,res)=>{
     console.log(req.body.password);
   let userExsist=await userSchema.findOne({email:email})
   if(!userExsist ){
-    let passwordhased=await bycrpt.hash(req.body.password,10)
-    let data={
-      name:name,
-      email:email,
-      phone:phone,
-      password:passwordhased
-    }
-    // let result=await userSchema.create(data)
-    // console.log(result)
+    let phoneExsisted=await userSchema.findOne({phone:phone})
+    if(!phoneExsisted){
 
+      let passwordhased=await bycrpt.hash(req.body.password,10)
+      let data={
+        name:name,
+        email:email,
+        phone:phone,
+        password:passwordhased
+      }
+      let result=await userSchema.create(data)
+      res.send({message:"Signup completed successfully",status:true})
+    }else{
+      return res.status(201).send({message:"Phone number Exsisted",status:false})
+    }
   }else{
-    return res.status(200).send({message:"Email already used",status:false})
+    return res.status(200).send({message:"Email already Exsisted",status:false})
   }
 
   } catch (error) {
@@ -34,7 +39,7 @@ const postsigup=async(req,res)=>{
 const postlogin = async(req, res) => {
   try {
     
-    console.log(req.body);
+    let {email,password}=req.body
     let user=await userSchema.findOne({email:req.email})
     if(user){
 
@@ -43,8 +48,6 @@ const postlogin = async(req, res) => {
     }else{
       res.status(401).send({message:"User not found",status:false})
     }
-
-    
   } catch (error) {
     console.log(error)
     res.status(500).send({ message: "somthing went wrong" ,status:true});
