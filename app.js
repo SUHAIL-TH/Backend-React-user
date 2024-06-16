@@ -12,8 +12,10 @@ app.use(cors({
     credentials:true,
     origin:'http://localhost:5173'
 }))
-  
-  app.use((req, res, next) => {
+app.use(express.json())
+app.use(express.urlencoded({extended:true}))
+
+app.use((req, res, next) => {
     res.header("Cache-Control", "no-cache,  no-store, must-revalidate");
     next();
   });

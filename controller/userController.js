@@ -1,6 +1,7 @@
 const jwt=require("jsonwebtoken")
 const userSchema =require("../model/userSchema")
 const bycrpt=require("bcrypt")
+const jwt = require('jsonwebtoken');
 
 
 
@@ -36,24 +37,28 @@ const postsigup=async(req,res)=>{
 }
 
 
-const postlogin = async(req, res) => {
+const postlogin = async (req, res) => {
   try {
+    let { email, password } = req.body;
+    let user = await userSchema.findOne({ email: email });
     
-    let {email,password}=req.body
-    let user=await userSchema.findOne({email:req.email})
-    if(user){
+    if (user) {
+      let match = await bycrpt.compare(password, user.password);
+      
+      if (match) {
 
-
-      res.send({ message: "somthing added successfully" });
-    }else{
-      res.status(401).send({message:"User not found",status:false})
+        res.send({ message: "Login successfully", status: true });
+      } else {
+        res.status(401).send({ message: "Password does not match", status: false });
+      }
+    } else {
+      res.status(401).send({ message: "User not found", status: false });
     }
   } catch (error) {
-    console.log(error)
-    res.status(500).send({ message: "somthing went wrong" ,status:true});
+    console.log(error);
+    res.status(500).send({ message: "Something went wrong", status: false });
   }
 };
-
 module.exports = {
   postlogin,
   postsigup
