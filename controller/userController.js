@@ -2,7 +2,8 @@
 const userSchema =require("../model/userSchema")
 const bycrpt=require("bcrypt")
 const jwt = require('jsonwebtoken');
-
+const nodemailer=require("nodemailer")
+const transporter =require("../config/mailerConfig")
 
 
 
@@ -67,9 +68,10 @@ const postlogin = async (req, res) => {
 
 const userDetails=async(req,res)=>{
   try {
-    console.log(req.body)
-    console.log(req.email)
+    
     console.log(req.userId)    
+    let userdetails=await userSchema.findById(req.userId)
+
   } catch (error) {
     console.log(error)
     res.status(500).send({message:"somthing went wrong"})
@@ -77,8 +79,47 @@ const userDetails=async(req,res)=>{
 }
 
 
+const resetEmail=async(req,res)=>{
+  try {
+    let mailOption = {
+      from: "eshoes518@gmail.com",
+      to: "suhailth17756@gmail.com",  
+      subject: "Link for reset password",
+      html: `
+        <div style="font-family: Arial, sans-serif; background-color: black; padding: 20px;">
+          <p style="color: white; font-size: 16px; margin-bottom: 20px; font-weight-bold">
+             Hi suhail, please click the button below to reset your password:
+          </p>
+          <a
+            href="http://localhost:4200/resetsubmit?token="
+            style="display: inline-block; background-color: #007bff; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 4px;"
+          >
+            Reset Password
+          </a>
+        </div>
+      `,
+    };
+
+      transporter.transporter.sendMail(mailOption, function (error, infor) {
+        a
+        if (error) {
+            console.log(error);
+        } else {
+            console.log("mail has been send to the email");
+
+        }
+    })
+
+  } catch (error) {
+    console.log(error)
+    res.status(500).send({message:"somthing went wrong",status:false})
+  }
+}
+
+
 module.exports = {
   postlogin,
   postsigup,
-  userDetails
+  userDetails,
+  resetEmail
 };

@@ -6,6 +6,7 @@ const verify=require("../middleware/authMiddleware")
 userRouter.post("/login",userController.postlogin)
 userRouter.post("/signup",userController.postsigup)
 userRouter.get("/userdetails",verify,userController.userDetails)
+userRouter.post("/resetemail",userController.resetEmail)
 
 
 module.exports=userRouter   
