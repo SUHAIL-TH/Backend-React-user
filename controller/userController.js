@@ -1,7 +1,8 @@
-const jwt=require("jsonwebtoken")
+
 const userSchema =require("../model/userSchema")
 const bycrpt=require("bcrypt")
 const jwt = require('jsonwebtoken');
+
 
 
 
@@ -46,8 +47,12 @@ const postlogin = async (req, res) => {
       let match = await bycrpt.compare(password, user.password);
       
       if (match) {
+        let secret="aishu_suhail"
+        const token = jwt.sign({ userId: user._id},  'your-secret-key', {
+        
+          });
 
-        res.send({ message: "Login successfully", status: true });
+        res.send({ message: "Login successfully", status: true,token:token });
       } else {
         res.status(401).send({ message: "Password does not match", status: false });
       }
@@ -59,7 +64,21 @@ const postlogin = async (req, res) => {
     res.status(500).send({ message: "Something went wrong", status: false });
   }
 };
+
+const userDetails=async(req,res)=>{
+  try {
+    console.log(req.body)
+    console.log(req.email)
+    console.log(req.userId)    
+  } catch (error) {
+    console.log(error)
+    res.status(500).send({message:"somthing went wrong"})
+  }
+}
+
+
 module.exports = {
   postlogin,
-  postsigup
+  postsigup,
+  userDetails
 };
