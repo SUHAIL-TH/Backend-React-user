@@ -6,7 +6,6 @@ function verifyToken(req, res, next) {
 
   const token = authHeader.split(" ")[1]; // Extract the token part from 'Bearer <token>'
   if (!token) return res.status(401).json({ error: "Access denied" });
-
   try {
     const secret = "your-secret-key";
     const decoded = jwt.verify(token, secret);
