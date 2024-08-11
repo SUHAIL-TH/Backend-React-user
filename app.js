@@ -7,7 +7,12 @@ const dbconnect=require("./config/config")
 const morgan=require("morgan")
 // const multer=require("multer")
 
+const { swaggerUi, swaggerSpec } = require('./config/swagger-config'); // Adjust path as necessary
 dbconnect.dbconnect()
+
+
+// Swagger UI setup
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(cors({
     credentials:true,
     origin:'http://localhost:5173'

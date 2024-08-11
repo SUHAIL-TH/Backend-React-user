@@ -1,9 +1,92 @@
 
 const userSchema =require("../model/userSchema")
+
 const bycrpt=require("bcrypt")
 const jwt = require('jsonwebtoken');
 const nodemailer=require("nodemailer")
 const transporter =require("../config/mailerConfig")
+
+
+/**
+ * @swagger
+ * /signup:
+ *   post:
+ *     summary: User signup
+ *     description: Register a new user by providing name, email, password, and phone number. The email and phone number must be unique.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: John Doe
+ *               email:
+ *                 type: string
+ *                 example: johndoe@example.com
+ *               password:
+ *                 type: string
+ *                 example: yourpassword123
+ *               phone:
+ *                 type: string
+ *                 example: +1234567890
+ *     responses:
+ *       200:
+ *         description: Signup completed successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Signup completed successfully
+ *                 status:
+ *                   type: boolean
+ *                   example: true
+ *       201:
+ *         description: Phone number already existed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Phone number already existed
+ *                 status:
+ *                   type: boolean
+ *                   example: false
+ *       409:
+ *         description: Email already existed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Email already existed
+ *                 status:
+ *                   type: boolean
+ *                   example: false
+ *       500:
+ *         description: Something went wrong on the server
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Something went wrong
+ *                 status:
+ *                   type: boolean
+ *                   example: false
+ */
+
 
 
 
@@ -38,6 +121,76 @@ const postsigup=async(req,res)=>{
   }
 }
 
+/**
+ * @swagger
+ * /login:
+ *   post:
+ *     summary: User login
+ *     description: Logs in a user by validating the email and password, and returns a JWT token if successful.
+ *     parameters:
+ *       - in: query
+ *         name: email
+ *         schema:
+ *           type: string
+ *           format: email
+ *           minLength: 5
+ *           maxLength: 50
+ *           example: johndoe@example.com
+ *         required: true
+ *         description: The user's email address
+ *       - in: query
+ *         name: password
+ *         schema:
+ *           type: string
+ *           minLength: 8
+ *           maxLength: 20
+ *           example: Password123
+ *           description: Password must be between 8 and 20 characters
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Login successfully
+ *                 status:
+ *                   type: boolean
+ *                   example: true
+ *                 token:
+ *                   type: string
+ *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *       401:
+ *         description: Unauthorized - Invalid email or password
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Password does not match
+ *                 status:
+ *                   type: boolean
+ *                   example: false
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Something went wrong
+ *                 status:
+ *                   type: boolean
+ *                   example: false
+ */
 
 const postlogin = async (req, res) => {
   try {
@@ -66,17 +219,82 @@ const postlogin = async (req, res) => {
   }
 };
 
-const userDetails=async(req,res)=>{
-  try {
-    
-    console.log(req.userId)    
-    let userdetails=await userSchema.findById(req.userId)
+/**
+ * @swagger
+ * /userdetails:
+ *   get:
+ *     summary: Retrieve user details
+ *     description: Get details of the user by their user ID.
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved user details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Fetched user details
+ *                 status:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                       example: 60b8d295f13f2c001f647a11
+ *                     name:
+ *                       type: string
+ *                       example: John Doe
+ *                     email:
+ *                       type: string
+ *                       example: johndoe@example.com
+ *                     phone:
+ *                       type: string
+ *                       example: +1234567890
+ *       401:
+ *         description: Unauthorized request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Something went wrong
+ */
 
+
+const userDetails = async (req, res) => {
+  try {
+    console.log("reached her")
+    console.log(req.userId);
+    let userdetails = await userSchema.findById(req.userId);
+    res.status(200).send({
+      message: "Fetched user details",
+      status: true,
+      data: userdetails
+    });
   } catch (error) {
-    console.log(error)
-    res.status(500).send({message:"somthing went wrong"})
+    console.log(error);
+    res.status(500).send({ message: "Something went wrong" });
   }
-}
+};
+
 
 
 const resetEmail=async(req,res)=>{
