@@ -105,7 +105,9 @@ const postsigup=async(req,res)=>{
         email:email,
         phone:phone,
         password:passwordhased
+        
       }
+    
       let result=await userSchema.create(data)
       res.send({message:"Signup completed successfully",status:true})
     }else{
@@ -220,6 +222,7 @@ const postlogin = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).send({ message: "Something went wrong", status: false });
+    
   }
 };
 
