@@ -82,6 +82,10 @@ const transporter =require("../config/mailerConfig")
  *                 message:
  *                   type: string
  *                   example: Something went wrong
+ * 
+
+
+ 
  *                 status:
  *                   type: boolean
  *                   example: false
