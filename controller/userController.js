@@ -206,11 +206,10 @@ const postlogin = async (req, res) => {
       
       if (match) {
         let secret="aishu_suhail"
-        const token = jwt.sign({ userId: user._id},  'your-secret-key', {
-        
-          });
+        const token = jwt.sign({ userId: user._id},  'your-secret-key', {});
 
         res.send({ message: "Login successfully", status: true,token:token });
+        
       } else {
         res.status(401).send({ message: "Password does not match", status: false });
       }
