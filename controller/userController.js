@@ -337,10 +337,24 @@ const resetEmail=async(req,res)=>{
   }
 }
 
+const getUserDetails=async(req,res)=>{
+  try {
+    let array=[10,20,50,50]
+
+    array.forEach((a)=>{
+      
+    })
+    
+  } catch (error) {
+    console.log(error)
+    res.status(500).send({message:"somthing went wrong",status:false})
+  }
+}
 
 module.exports = {
   postlogin,
   postsigup,
   userDetails,
-  resetEmail
+  resetEmail,
+  getUserDetails
 };

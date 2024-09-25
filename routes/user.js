@@ -8,6 +8,6 @@ userRouter.post("/signup",userController.postsigup)
 
 userRouter.get("/userdetails",verify,userController.userDetails)
 userRouter.post("/resetemail",userController.resetEmail)
-
-
+userRouter.post("/singupcontroller",userController.getUserDetails)
+userRouter.post("/singupcontroller",userController.getUserDetails)
 module.exports=userRouter   
