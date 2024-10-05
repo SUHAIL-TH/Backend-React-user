@@ -82,6 +82,10 @@ const transporter =require("../config/mailerConfig")
  *                 message:
  *                   type: string
  *                   example: Something went wrong
+ * 
+
+
+ 
  *                 status:
  *                   type: boolean
  *                   example: false
@@ -208,11 +212,10 @@ const postlogin = async (req, res) => {
       
       if (match) {
         let secret="aishu_suhail"
-        const token = jwt.sign({ userId: user._id},  'your-secret-key', {
-        
-          });
+        const token = jwt.sign({ userId: user._id},  'your-secret-key', {});
 
         res.send({ message: "Login successfully", status: true,token:token });
+        
       } else {
         res.status(401).send({ message: "Password does not match", status: false });
       }
@@ -341,10 +344,24 @@ const resetEmail=async(req,res)=>{
   }
 }
 
+const getUserDetails=async(req,res)=>{
+  try {
+    let array=[10,20,50,50]
+
+    array.forEach((a)=>{
+      
+    })
+    
+  } catch (error) {
+    console.log(error)
+    res.status(500).send({message:"somthing went wrong",status:false})
+  }
+}
 
 module.exports = {
   postlogin,
   postsigup,
   userDetails,
-  resetEmail
+  resetEmail,
+  getUserDetails
 };
